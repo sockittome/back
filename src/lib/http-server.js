@@ -29,9 +29,9 @@ export const start = () => {
       .then(() => {
         state.http = app.listen(process.env.PORT, () => {
           log('__SERVER_UP__', process.env.PORT);
-          ioServer(state.http);
           resolve();
         });
+        ioServer(state.http);
       })
       .catch(reject);
   });
