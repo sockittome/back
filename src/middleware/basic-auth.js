@@ -1,5 +1,3 @@
-'use strict';
-
 const errorHandler = require('./error-handler.js');
 
 module.exports = function(req, res, next) {

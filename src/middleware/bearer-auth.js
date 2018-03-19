@@ -1,5 +1,3 @@
-'use strict';
-
 const errorHandler = require('./error-handler');
 const Auth = require('../model/auth');
 const jsonWebToken = require('jsonwebtoken');
