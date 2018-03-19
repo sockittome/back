@@ -30,6 +30,6 @@ ioServer.on('error', error => {
   console.error('ERROR', error);
 });
 
-ioServer.listen(process.env.PORT, () => {
+httpServer.listen(process.env.PORT, () => {
   console.log('SERVER UP', process.env.PORT);
 });
