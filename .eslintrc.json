@@ -12,10 +12,11 @@
     "res": true,
     "next": true
   },
+  "parser": "babel-eslint",  
   "parserOptions": {
     "extends": ["eslint:recommended", "plugin:react/recommended"],
     "sourceType": "module",
-    "ecmaVersion": 6,
+    "ecmaVersion": 7,
     "ecmaFeatures": {
       "arrowFunctions": true,
       "classes": true,
@@ -29,7 +30,7 @@
   },
   "rules": {
     "no-console": "off",
-    "indent": [ "error", 2 ],
+    "indent": ["error", 2, { "SwitchCase": 1 }],
     "quotes": ["error", "single", { "allowTemplateLiterals": true }],
     "comma-dangle": ["error", "always-multiline"],
     "semi": [ "error", "always" ],

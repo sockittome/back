@@ -1,23 +1,20 @@
-'use strict';
+// -- setting up dependencies -- //
+import { log, logError } from './utils.js';
 
-// -- setting up server -- //
-const express = require('express');
-const app = express();
-const httpServer = require('http').Server(app);
-require('dotenv').config();
+export default (server) => {
+  // -- setting up socket -- //
+  const ioServer = require('socket.io')(server);
+  const events = require('./events');
 
-// -- setting up socket -- //
-const ioServer = require('socket.io')(httpServer);
-const events = require('./events');
+  ioServer.on('connection', socket => {
+    log('__CLIENT_CONNECTED__', socket.id);
 
-ioServer.on('connection', socket => {
-  console.log('connection', socket.id);
-
-  socket.on(events.SEND_QUESTION, question => {
-    console.log('socket event', events.SEND_QUESTION);
-    socket.emit(events.RECEIVE_QUESTION, 'You sent a question!');
-    ioServer.emit(events.RECEIVE_QUESTION, {
-      ...question,
+    socket.on(events.SEND_QUESTION, question => {
+      console.log('socket event', events.SEND_QUESTION);
+      socket.emit(events.RECEIVE_QUESTION, 'You sent a question!');
+      ioServer.emit(events.RECEIVE_QUESTION, {
+        ...question,
+      });
     });
   });
 
@@ -36,10 +33,11 @@ ioServer.on('disconnect', () => {
   console.log('LEFT', ioServer.id);
 });
 
-ioServer.on('error', error => {
-  console.error('ERROR', error);
-});
+  ioServer.on('disconnect', () => {
+    log('__CLIENT_DISCONNECTED__', socket.id);
+  });
 
-httpServer.listen(process.env.PORT, () => {
-  console.log('SERVER UP', process.env.PORT);
-});
+  ioServer.on('error', error => {
+    logError('ERROR', error);
+  });
+};

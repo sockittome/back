@@ -1,5 +1,3 @@
-'use strict';
-
 const events = module.exports = {};
 
 events.SEND_QUESTION = 'SEND_QUESTION';
