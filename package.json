@@ -14,7 +14,7 @@
   },
   "homepage": "https://github.com/sockittome/back#readme",
   "scripts": {
-    "start": "nodemon ./src/lib/io-server.js",
+    "start": "node ./src/lib/io-server.js",
     "start:watch": "nodemon ./src/lib/io-server.js",
     "start:debug": "DEBUG=http* nodemon index.js",
     "test": "jest -i --coverage --verbose",
