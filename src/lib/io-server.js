@@ -18,6 +18,21 @@ export default (server) => {
     });
   });
 
+  socket.on(events.SEND_ANSWER, answer => {
+    console.log('socket event', events.SEND_ANSWER);
+    socket.emit(events.RECEIVE_ANSWER, 'You sent an answer!');
+    ioServer.emit(events.RECEIVE_ANSWER, {
+      ...answer,
+    });
+    console.log('ioServer answer', answer);
+    console.log('answer from: ', socket.id);
+  });
+});
+
+ioServer.on('disconnect', () => {
+  console.log('LEFT', ioServer.id);
+});
+
   ioServer.on('disconnect', () => {
     log('__CLIENT_DISCONNECTED__', socket.id);
   });
