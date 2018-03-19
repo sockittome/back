@@ -20,6 +20,16 @@ ioServer.on('connection', socket => {
       ...question,
     });
   });
+
+  socket.on(events.SEND_ANSWER, answer => {
+    console.log('socket event', events.SEND_ANSWER);
+    socket.emit(events.RECEIVE_ANSWER, 'You sent an answer!');
+    ioServer.emit(events.RECEIVE_ANSWER, {
+      ...answer,
+    });
+    console.log('ioServer answer', answer);
+    console.log('answer from: ', socket.id);
+  });
 });
 
 ioServer.on('disconnect', () => {
@@ -30,6 +40,6 @@ ioServer.on('error', error => {
   console.error('ERROR', error);
 });
 
-ioServer.listen(process.env.PORT, () => {
+httpServer.listen(process.env.PORT, () => {
   console.log('SERVER UP', process.env.PORT);
 });
