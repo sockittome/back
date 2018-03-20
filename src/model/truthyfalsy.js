@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const Profile = require('./profile');
 
 const TruthyFalsy = mongoose.Schema({
-  name: {type: String, required},
+  name: {type: String, required: true},
   questions: [{type: mongoose.Schema.Type.ObjectId, ref: 'tfquestion'}],
   profileId: {type: mongoose.Schema.Types.ObjectId, ref: 'profile', required: true},
 });

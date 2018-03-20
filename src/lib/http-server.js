@@ -17,7 +17,8 @@ const state = {
 
 app.use('/api/v1', router);
 require('../route/route-auth')(router);
-// require('../route/route-games')(router);
+require('../route/route-truthyfalsy')(router);
+require('../route/route-truthyfalsy-questions')(router);
 require('../route/route-profile')(router);
 
 
