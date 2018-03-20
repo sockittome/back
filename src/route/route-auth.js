@@ -28,7 +28,7 @@ module.exports = function(router) {
       })
       .then(userRes => userRes.generateToken())
       .then(token => response.status(201).send(token))
-      .catch(err => errorHandler(err, res));
+      .catch(error => errorHandler(error, response));
   })
 
     .get('/login', basicAuth, (request, response, next) => {
