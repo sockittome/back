@@ -17,7 +17,7 @@ const state = {
 
 app.use('/api/v1', router);
 require('../route/route-auth')(router);
-require('../route/route-games')(router);
+// require('../route/route-games')(router);
 require('../route/route-profile')(router);
 
 
