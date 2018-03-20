@@ -4,20 +4,28 @@ import express from 'express';
 import { log } from './utils.js'; // eslint-disable-line
 import bodyParser from 'body-parser';
 import cors from 'cors';
-import routes from '../route';
+// import routes from '../route';
 import ioServer from './io-server.js';
 
 // state
-const app = express().use(routes).use(bodyParser.json()).use(cors());
+const app = express().use(bodyParser.json()).use(cors());
+const router = express.Router();
 const state = {
   isOn: false,
   http: null,
 };
 
+app.use('/api/v1', router);
+require('../route/route-auth')(router);
+require('../route/route-games')(router);
+require('../route/route-profile')(router);
+
+
 // 404 - catch all
 app.all('*', (req, res) => {
   return res.status(404).send('PATH ERROR: 404 invalid path');
 });
+
 
 // interface
 export const start = () => {

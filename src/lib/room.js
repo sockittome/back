@@ -9,13 +9,14 @@ class Room {
     this.players = [];
     this.gameStarted = false;
     // gameScores object has each player's socket ID as the key and their score as the value
-    this.gameScores = {};
+    // this.gameScores = {};
 
     socket.join(roomCode);
   }
 
   startGame(game, socket, ioServer, instance) {
     this.gameStarted = true;
+    this.players.map(player => player.score = 0);
     switch(game) {
       case 'truthyfalsy':
         truthyfalsyGame(socket, ioServer, instance);

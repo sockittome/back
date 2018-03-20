@@ -41,7 +41,7 @@ Auth.methods.generateCompareHash = function () {
 Auth.methods.generateToken = function () {
   return this.generateCompareHash()
     .then(compareHash => {
-      return jwt.sign({ token: compareHash}, process.env.APP_SECRET);
+      return jwt.sign({ token: compareHash}, process.env.SECRET);
     })
     .catch(error => error);
 };
