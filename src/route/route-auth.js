@@ -1,4 +1,4 @@
-'use strict';
+
 
 import Auth from '../model/auth';
 import Profile from '../model/profile';
@@ -30,10 +30,12 @@ module.exports = function(router) {
       .then(token => response.status(201).send(token))
       .catch(err => errorHandler(err, res));
   })
+
     .get('/login', basicAuth, (request, response, next) => {
       log('__ROUTE__ GET /login');
       Auth.findOne({username: request.auth.username})
         .then(user => {
+          console.log('findOne', user);
           return user
             ? user.comparePasswordHash(request.auth.password)
             : Promise.reject(new Error('Authorization Failed. User not found.'));
