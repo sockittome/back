@@ -27,9 +27,7 @@ module.exports = function(router) {
         return newProfile;
       })
       .then(userRes => userRes.generateToken())
-      .then(token => {
-        return response.status(201).send(token);
-      })
+      .then(token => response.status(201).send(token))
       .catch(err => errorHandler(err, res));
   })
 
