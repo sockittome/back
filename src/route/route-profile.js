@@ -19,7 +19,6 @@ module.exports = function(router) {
 
     .put(bearerAuth, bodyParser, (request, response) => {
       Profile.findOne({
-        authId: request.auth._id,
         _id: request.params._id,
       })
         .then(profile => {
