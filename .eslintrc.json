@@ -1,0 +1,39 @@
+{
+  "env": {
+    "browser": true,
+    "node": true,
+    "commonjs": true,
+    "jest": true,
+    "es6": true
+  },
+  "globals": {
+    "err": true,
+    "req": true,
+    "res": true,
+    "next": true
+  },
+  "parser": "babel-eslint",  
+  "parserOptions": {
+    "extends": ["eslint:recommended", "plugin:react/recommended"],
+    "sourceType": "module",
+    "ecmaVersion": 7,
+    "ecmaFeatures": {
+      "arrowFunctions": true,
+      "classes": true,
+      "jsx": true,
+      "templateStrings": true,
+      "spread": true,
+      "modules": true,
+      "experimentalObjectRestSpread": true,
+      "impliedStrict": true
+    }
+  },
+  "rules": {
+    "no-console": "off",
+    "indent": ["error", 2, { "SwitchCase": 1 }],
+    "quotes": ["error", "single", { "allowTemplateLiterals": true }],
+    "comma-dangle": ["error", "always-multiline"],
+    "semi": [ "error", "always" ],
+    "linebreak-style": ["error", "unix"]
+  }
+}

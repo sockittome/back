@@ -1,0 +1,27 @@
+import {log} from './utils'; //eslint-disable-line
+import truthyfalsyGame from '../game/truthyfalsy';
+
+module.exports = class Room {
+  constructor(socket, roomCode) {
+    this.host = socket;
+    this.code = roomCode;
+    // players is an array of each player's socket
+    this.players = [];
+    this.gameStarted = false;
+    this.game = null;
+    // gameScores object has each player's socket ID as the key and their score as the value
+    // this.gameScores = {};
+
+    socket.join(roomCode);
+  }
+
+  startGame(game, socket, ioServer, instance) {
+    this.gameStarted = true;
+    this.players.map(player => player.score = 0);
+    switch(game) {
+      case 'truthyfalsy':
+        truthyfalsyGame(socket, ioServer, instance);
+        break;
+    }
+  }
+};
