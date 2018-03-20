@@ -28,16 +28,24 @@ export default (server) => {
       }
       //creating new room with code generated
       log('__ROOM_CREATED__', roomCode);
-      // where is this getting broadcasted to?
-      socket.broadcast.to(socket.id).emit('You created a room.');
       ioServer.all[roomCode] = new Room(socket, roomCode);
       let room = ioServer.all[roomCode];
+
+      // set keys and values on the room object created
       room.game = game;
       room.instance = instance;
+
+      // set max player limits for each game
+      switch (game) {
+        case 'truthyfalsy':
+          room.maxPlayers = 30;
+          break;
+      }
+
       // attaching the room created to the host's socket object
       socket.room = roomCode;
 
-      let data = {'roomCode': roomCode, 'game': game};
+      let data = { 'roomCode': roomCode, 'game': game, 'maxPlayers': room.maxPlayers };
       ioServer.emit('SEND_ROOM', JSON.stringify(data));
     });
 
@@ -45,8 +53,8 @@ export default (server) => {
       let room = ioServer.all[roomCode];
       if (room) {
         // if game has already started in the room, can't join
-        if (room.gameStarted) {
-          socket.emit('ERROR_JOIN_ROOM', `A game has already started in this room.`);
+        if (room.closed) {
+          socket.emit('ERROR_JOIN_ROOM', `A game has already started in this room or the room is at capacity.`);
           return;
         }
 
@@ -61,19 +69,34 @@ export default (server) => {
         }
 
         console.log(`${nickname} joined ${roomCode}`);
-        socket.emit('JOINED_ROOM', room.game, room.instance);
 
+        // setting variables on socket
         socket.nickname = nickname;
         socket.roomJoined = roomCode;
-        room.players.push(socket);
         socket.join(roomCode);
-        socket.broadcast.to(roomCode).emit(`${nickname} has joined the room.`);
+
+        // pushes socket into the players array in room
+        room.players.push(socket);
+        let numPlayers = room.players.length;
+
+        // closing the room if the max players is met
+        if (numPlayers >= room.maxPlayers) room.closed = true;
+
+        // sending number of players in the waiting room back to front end
+        socket.emit('JOINED_ROOM', room.game, room.instance, room.maxPlayers);
+        let playerNames = room.players.map(player => player.nickname);
+        ioServer.in(roomCode).emit('PLAYER_JOINED', numPlayers, playerNames);
       }
       else {
         // if room doesn't exist
         socket.emit('ERROR_JOIN_ROOM', `This room does not exist.`);
       }
     });
+
+    // socket.on('GET_NUMPLAYERS', roomCode => {
+    //   let room = ioServer.all[roomCode];
+    //   ioServer.in(roomCode).emit('RECEIVE_NUMPLAYERS', room.players.length);
+    // });
 
     socket.on('START_GAME', data => {
       let {game, instance, roomCode} = data;
@@ -100,6 +123,7 @@ export default (server) => {
       delete ioServer.all[roomCode];
     });
 
+    // how to emit leave room when they close browser window??
     socket.on('LEAVE_ROOM', socket => {
       let roomCode = socket.roomJoined;
       let room = ioServer.all[roomCode];
