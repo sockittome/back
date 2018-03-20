@@ -31,7 +31,8 @@ export default (server) => {
       // where is this getting broadcasted to?
       socket.broadcast.to(socket.id).emit('You created a room.');
       ioServer.all[roomCode] = new Room(socket, roomCode);
-      let room = ioServer.all[roomCode];room.game = game;
+      let room = ioServer.all[roomCode];
+      room.game = game;
       room.instance = instance;
       // attaching the room created to the host's socket object
       socket.room = roomCode;
