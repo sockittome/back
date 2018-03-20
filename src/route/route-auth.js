@@ -16,7 +16,7 @@ module.exports = function(router) {
 
     let user = new Auth(request.body);
 
-    user.generatePasswordHash(pw)
+    return user.generatePasswordHash(pw)
       .then(newUser => newUser.save())
       .then(newProfile => {
         new Profile({
@@ -27,10 +27,10 @@ module.exports = function(router) {
         return newProfile;
       })
       .then(userRes => userRes.generateToken())
-      .then(token => response.status(201).json(token))
+      .then(token => response.status(201).send(token))
       .catch(err => errorHandler(err, res));
   })
-    .get('/login', basicAuth, (request, response) => {
+    .get('/login', basicAuth, (request, response, next) => {
       log('__ROUTE__ GET /login');
       Auth.findOne({username: request.auth.username})
         .then(user => {
@@ -44,7 +44,7 @@ module.exports = function(router) {
           return user;
         })
         .then(user => user.generateToken())
-        .then(token => response.status(200).json(token))
-        .catch(err => errorHandler(err, res));
+        .then(token => response.status(200).send(token))
+        .catch(next);
     });
 };
