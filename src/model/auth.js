@@ -13,7 +13,7 @@ const Auth = mongoose.Schema({
 });
 
 Auth.methods.generatePasswordHash = function (password) {
-  if(!password) return Promise.reject(new Error('Authorization failed.Password required'));
+  if(!password) return Promise.reject(new Error('Authorization failed. Password required'));
 
   return bcrypt.hash(password, 10)
     .then(hash => this.password = hash)
