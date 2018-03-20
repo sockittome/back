@@ -1,13 +1,14 @@
 import {log} from './utils'; //eslint-disable-line
 import truthyfalsyGame from '../game/truthyfalsy';
 
-class Room {
+module.exports = class Room {
   constructor(socket, roomCode) {
     this.host = socket;
-    this.room = roomCode;
+    this.code = roomCode;
     // players is an array of each player's socket
     this.players = [];
     this.gameStarted = false;
+    this.game = null;
     // gameScores object has each player's socket ID as the key and their score as the value
     // this.gameScores = {};
 
@@ -23,5 +24,4 @@ class Room {
         break;
     }
   }
-
-}
+};

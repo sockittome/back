@@ -6,7 +6,6 @@ import Room from './room';
 export default (server) => {
   // -- setting up socket -- //
   const ioServer = require('socket.io')(server);
-  const events = require('./events');
 
   // ioServer.all is map of all the rooms
   ioServer.all = {};
@@ -14,7 +13,7 @@ export default (server) => {
   ioServer.on('connection', socket => {
     log('__CLIENT_CONNECTED__', socket.id);
 
-    socket.on('CREATE_ROOM', () => {
+    socket.on('CREATE_ROOM', (game, instance) => {
       // generating room code for users
       let roomCode = randomString.generate({
         charset: 'alphabetic',
@@ -27,42 +26,57 @@ export default (server) => {
           length: 4,
         }).toUpperCase();
       }
+      //creating new room with code generated
       log('__ROOM_CREATED__', roomCode);
-      socket.broadcast.to(socket.id).emit(events.CREATE_ROOM, 'You created a room.');
+      // where is this getting broadcasted to?
+      socket.broadcast.to(socket.id).emit('You created a room.');
       ioServer.all[roomCode] = new Room(socket, roomCode);
+      let room = ioServer.all[roomCode];room.game = game;
+      room.instance = instance;
+      // attaching the room created to the host's socket object
       socket.room = roomCode;
+
+      let data = {'roomCode': roomCode, 'game': game};
+      ioServer.emit('SEND_ROOM', JSON.stringify(data));
     });
 
     socket.on('JOIN_ROOM', (roomCode, nickname) => {
       let room = ioServer.all[roomCode];
       if (room) {
+        // if game has already started in the room, can't join
         if (room.gameStarted) {
-          socket.broadcast.to(socket.id).emit(`A game has already started in this room.`);
+          socket.emit('ERROR_JOIN_ROOM', `A game has already started in this room.`);
           return;
         }
+
+        // if nickname is already in the room, can't join
+        let duplicateNick = false;
+        room.players.forEach(player => {
+          if (player.nickname === nickname) duplicateNick = true;
+        });
+        if (duplicateNick) {
+          socket.emit('ERROR_JOIN_ROOM', `This nickname is already being used in the room.`);
+          return;
+        }
+
+        console.log(`${nickname} joined ${roomCode}`);
+        socket.emit('JOINED_ROOM', room.game, room.instance);
+
         socket.nickname = nickname;
         socket.roomJoined = roomCode;
         room.players.push(socket);
-        room.gameScores[socket.id] = 0;
         socket.join(roomCode);
         socket.broadcast.to(roomCode).emit(`${nickname} has joined the room.`);
       }
       else {
-        socket.broadcast.to(socket.id).emit(`The room you entered does not exist.`);
+        // if room doesn't exist
+        socket.emit('ERROR_JOIN_ROOM', `This room does not exist.`);
       }
     });
 
-    socket.on('START_GAME', (game, instance) => {
-      let roomCode = socket.room;
+    socket.on('START_GAME', data => {
+      let {game, instance, roomCode} = data;
       let room = ioServer.all[roomCode];
-
-      // variables game and instance should be passed in from front end
-      game = 'truthyfalsy';
-      instance = [
-        {'question': 'React is a JS framework.', 'answer': false},
-        {'question': 'Node is based off the Chrome v8 engine.', 'answer': true},
-        {'question': 'JavaScript is single-threaded.', 'answer': true},
-      ];
 
       // start the game
       room.startGame(game, socket, ioServer, instance);
