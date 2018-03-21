@@ -18,7 +18,7 @@ module.exports = class Room {
     this.players.map(player => player.score = 0);
     switch(game) {
       case 'truthyfalsy':
-        truthyfalsyGame(socket, roomCode, instance);
+        truthyfalsyGame(socket, roomCode, ioServer, instance);
         break;
     }
   }

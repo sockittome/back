@@ -27,9 +27,10 @@ app.all('*', (req, res) => {
   return res.status(404).send('PATH ERROR: 404 invalid path');
 });
 
+const server = module.exports = {};
 
 // interface
-export const start = () => {
+server.start = () => {
   return new Promise((resolve, reject) => {
     if (state.isOn)
       return reject(new Error('USAGE ERROR: the server is already on'));
@@ -38,15 +39,18 @@ export const start = () => {
       .then(() => {
         state.http = app.listen(process.env.PORT, () => {
           log('__SERVER_UP__', process.env.PORT);
+          const ioServ = require('socket.io')(state.http);
+          ioServ.all = {};
+
+          ioServer(ioServ);
           resolve();
         });
-        ioServer(state.http);
       })
       .catch(reject);
   });
 };
 
-export const stop = () => {
+server.stop = () => {
   return new Promise((resolve, reject) => {
     if (!state.isOn)
       return reject(new Error('USAGE ERROR: the server is already off'));

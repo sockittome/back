@@ -2,15 +2,21 @@
 import { log, logError } from './utils.js';
 import randomString from 'randomstring';
 import Room from './room';
+const server = require('./http-server');
 
-export default (server) => {
+export default (ioServer) => {
   // -- setting up socket -- //
-  const ioServer = require('socket.io')(server);
+  // const ioServer = require('socket.io')(srvr);
 
-  // ioServer.all is map of all the rooms
-  ioServer.all = {};
+
+  // server.all is map of all the rooms
+  // ioServer.all = {};
+
 
   ioServer.on('connection', socket => {
+
+    console.log('SERVER.ALL', ioServer.all);
+
     log('__CLIENT_CONNECTED__', socket.id);
 
 
@@ -78,6 +84,7 @@ export default (server) => {
 
         // pushes socket into the players array in room
         room.players.push(socket);
+        // console.log('PLAYERS ARRAY', room.players);
         let numPlayers = room.players.length;
 
         // closing the room if the max players is met
@@ -86,6 +93,7 @@ export default (server) => {
         // sending number of players in the waiting room back to front end
         socket.emit('JOINED_ROOM', room.game, room.instance, room.maxPlayers);
         let playerNames = room.players.map(player => player.nickname);
+        // let playerIDs = room.players.map(player => player.id);
         ioServer.in(roomCode).emit('TRACK_PLAYERS', numPlayers, playerNames);
       }
       else {
@@ -103,9 +111,20 @@ export default (server) => {
 
 
     // ==================== START GAME ==================== //
+    // socket.on('UPDATE_PLAYERARRAY', (playerIDs, roomCode) => {
+    //   console.log('UPDATEPLAYERARRAY IDs', playerIDs);
+    //   let room = ioServer.all[roomCode];
+    //   playerIDs.forEach(id => {
+    //     let playerSocket = ioServer.sockets.connected[id];
+    //     room.players.push(playerSocket);
+    //   });
+    // });
+
     socket.on('START_GAME', data => {
       let {game, instance, roomCode} = data;
+
       let room = ioServer.all[roomCode];
+      console.log('START GAME PLAYERS ARRAY', room.players);
 
       // start the game with the host socket
       room.startGame(game, roomCode, socket, ioServer, instance.questions);
