@@ -32,7 +32,7 @@ module.exports = function(router) {
     .delete(bearerAuth, (request, response) => {
       return Profile.findById(request.params._id)
         .then(profile => {
-          if(profile.authId.toString() === request.auth._id.toString()) return profile.remove();
+          if(profile.authId.toString() === request.user._id.toString()) return profile.remove();
           return errorHandler(new Error('Authorization failed'), response);
         })
         .then(() => response.sendStatus(204))
