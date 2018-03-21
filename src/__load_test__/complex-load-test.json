@@ -1,6 +1,6 @@
 {
   "config": {
-    "target": "http://localhost:3000",
+    "target": "http://sockit.live:3000",
     "phases": [
       {
         "duration": 5,
@@ -8,7 +8,7 @@
       },
       {
         "duration": 20,
-        "arrivalRate": 1000
+        "arrivalRate": 100
       }
     ]
     ,
@@ -23,10 +23,9 @@
         },
         {
           "post": {
-            "url": "/api/v1/signup",
+            "url": "/api/v1/register",
             "json": {
               "username": "{{ username }}",
-              "email": " {{ email }}",
               "password": "{{ password }}"
             }
           }

@@ -1,14 +1,10 @@
 {
   "config": {
-    "target": "http://localhost:3000",
+    "target": "http://sockit.live:3000",
     "phases": [
       {
-        "duration": 3,
-        "arrivalRate": 1
-      },
-      {
-        "duration": 5,
-        "arrivalRate": 20
+        "duration": 10,
+        "arrivalRate": 50
       }
     ]
     ,
