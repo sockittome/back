@@ -13,12 +13,12 @@ module.exports = class Room {
     socket.join(roomCode);
   }
 
-  startGame(game, socket, ioServer, instance) {
+  startGame(game, roomCode, socket, ioServer, instance) {
     this.closed = true;
     this.players.map(player => player.score = 0);
     switch(game) {
       case 'truthyfalsy':
-        truthyfalsyGame(socket, ioServer, instance);
+        truthyfalsyGame(socket, roomCode, instance);
         break;
     }
   }

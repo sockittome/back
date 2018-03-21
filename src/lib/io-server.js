@@ -44,9 +44,6 @@ export default (server) => {
           break;
       }
 
-      // attaching the room created to the host's socket object
-      socket.room = roomCode;
-
       let data = { 'roomCode': roomCode, 'game': game, 'maxPlayers': room.maxPlayers };
       ioServer.emit('SEND_ROOM', JSON.stringify(data));
     });
@@ -111,7 +108,7 @@ export default (server) => {
       let room = ioServer.all[roomCode];
 
       // start the game with the host socket
-      room.startGame(game, socket, ioServer, instance.questions);
+      room.startGame(game, roomCode, socket, ioServer, instance.questions);
       log(`__GAME_STARTED__: [${game}: ${roomCode}]`);
     });
 
@@ -143,6 +140,8 @@ export default (server) => {
 
 
     // ==================== DISCONNECT ==================== //
+    // TODO: what if the socket that disconnects is the host?
+
     socket.on('disconnect', () => {
       if (socket.roomJoined) {
         let roomCode = socket.roomJoined;
