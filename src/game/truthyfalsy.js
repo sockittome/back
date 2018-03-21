@@ -1,34 +1,24 @@
-module.exports = (socket, ioServer, questions) => { // eslint-disable-line
+module.exports = (socket, ioServer, questions) => {
+  // questions is an array of objects containing a question and an answer key
+
   let roomCode = socket.room;
   let room = ioServer.all[roomCode];
 
+  _questionPhase(questions, room, socket, ioServer);
   // initially call question phase
-  _questionPhase(questions, roomCode);
 
-  function _questionPhase() {
-    console.log(roomCode, '__QUESTION_PHASE__');
-    // currentQuestion is a question object with the question and answer
-    let currentQuestion = questions.shift();
+  // function _answerPhase() {
+  //   console.log(roomCode, '__ANSWER_PHASE__');
+  //   // this function should receive from/send to the front end the stats for correct/wrong answers?
 
-    // 30 seconds to display question and allow players to answer
-    setTimeout(_answerPhase, 30000);
-
-    // send the question object to the front end
-    // socket.broadcast.to(roomCode).emit(currentQuestion);
-  }
-
-  function _answerPhase() {
-    console.log(roomCode, '__ANSWER_PHASE__');
-    // this function should receive from/send to the front end the stats for correct/wrong answers?
-
-    if (questions.length) {
-      // 15 seconds to display the results screen for the question
-      setTimeout(_questionPhase, 15000);
-    }
-    else {
-      // call end game function/screen here
-    }
-  };
+  //   if (questions.length) {
+  //     // 15 seconds to display the results screen for the question
+  //     setTimeout(_questionPhase, 15000);
+  //   }
+  //   else {
+  //     // call end game function/screen here
+  //   }
+  // };
 
 
 
@@ -54,3 +44,16 @@ module.exports = (socket, ioServer, questions) => { // eslint-disable-line
   //   console.log('answer from: ', socket.id);
   // });
 };
+
+
+function _questionPhase(questions, room, socket, ioServer) {
+  console.log(roomCode, '__QUESTION_PHASE__');
+  // currentQuestion is a question object with the question and answer
+  let currentQuestion = questions.shift();
+
+  // send the question object to the front end
+  ioServer.in(roomCode).emit('SEND_QUESTION', currentQuestion);
+
+  // 30 seconds to display question and allow players to answer
+  // setTimeout(_answerPhase, 30000);
+}

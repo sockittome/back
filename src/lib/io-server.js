@@ -111,7 +111,7 @@ export default (server) => {
       let room = ioServer.all[roomCode];
 
       // start the game with the host socket
-      room.startGame(game, socket, ioServer, instance);
+      room.startGame(game, socket, ioServer, instance.questions);
       log(`__GAME_STARTED__: [${game}: ${roomCode}]`);
     });
 
@@ -132,9 +132,18 @@ export default (server) => {
     });
 
 
+    // ==================== LEAVE ROOM ==================== //
+    socket.on('LEAVE_ROOM', roomCode => {
+      let room = ioServer.all[roomCode];
+      room.players = room.players.filter(player => player.id !== socket.id);
+      let playerNames = room.players.map(player => player.nickname);
+      socket.broadcast.to(roomCode).emit('TRACK_PLAYERS', room.players.length, playerNames);
+      socket.leave(roomCode);
+    });
+
+
     // ==================== DISCONNECT ==================== //
     socket.on('disconnect', () => {
-      console.log(socket.id);
       if (socket.roomJoined) {
         let roomCode = socket.roomJoined;
         let room = ioServer.all[roomCode];
