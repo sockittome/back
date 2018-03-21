@@ -14,19 +14,6 @@ function _questionPhase(questions, room, socket, ioServer) {
   // send the question object to the front end
   ioServer.in(room.code).emit('SEND_QUESTION', currentQuestion);
 
-  // listening for answers from front end
-  socket.on('SEND_ANSWER', (answer, id) => {
-    console.log('ID', id);
-    console.log('ROOM.PLAYERS', room.players);
-    let player = room.players.filter(player => player.id === id)[0];
-    console.log('PLAYER', player);
-    if (answer === currentQuestion.answer) {
-      player.score += 10;
-      player.emit('CORRECT_ANSWER', player.nickname, player.score);
-    }
-    else player.emit('WRONG_ANSWER', player.nickname, player.score);
-  });
-
   // 30 seconds to display question and allow players to answer
   setTimeout(function() {
     _answerPhase(currentQuestion, questions, room, socket, ioServer);

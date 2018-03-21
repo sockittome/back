@@ -2,21 +2,9 @@
 import { log, logError } from './utils.js';
 import randomString from 'randomstring';
 import Room from './room';
-const server = require('./http-server');
 
 export default (ioServer) => {
-  // -- setting up socket -- //
-  // const ioServer = require('socket.io')(srvr);
-
-
-  // server.all is map of all the rooms
-  // ioServer.all = {};
-
-
   ioServer.on('connection', socket => {
-
-    console.log('SERVER.ALL', ioServer.all);
-
     log('__CLIENT_CONNECTED__', socket.id);
 
 
@@ -43,6 +31,9 @@ export default (ioServer) => {
       room.game = game;
       room.instance = instance;
 
+      // sets roomHost variable on socket
+      socket.roomHost = roomCode;
+
       // set max player limits for each game
       switch (game) {
         case 'truthyfalsy':
@@ -50,7 +41,7 @@ export default (ioServer) => {
           break;
       }
 
-      let data = { 'roomCode': roomCode, 'game': game, 'maxPlayers': room.maxPlayers };
+      let data = { 'roomCode': roomCode, 'game': game, 'maxPlayers': room.maxPlayers, 'roomHost': socket.id };
       ioServer.emit('SEND_ROOM', JSON.stringify(data));
     });
 
@@ -84,7 +75,6 @@ export default (ioServer) => {
 
         // pushes socket into the players array in room
         room.players.push(socket);
-        // console.log('PLAYERS ARRAY', room.players);
         let numPlayers = room.players.length;
 
         // closing the room if the max players is met
@@ -93,7 +83,6 @@ export default (ioServer) => {
         // sending number of players in the waiting room back to front end
         socket.emit('JOINED_ROOM', room.game, room.instance, room.maxPlayers);
         let playerNames = room.players.map(player => player.nickname);
-        // let playerIDs = room.players.map(player => player.id);
         ioServer.in(roomCode).emit('TRACK_PLAYERS', numPlayers, playerNames);
       }
       else {
@@ -122,9 +111,7 @@ export default (ioServer) => {
 
     socket.on('START_GAME', data => {
       let {game, instance, roomCode} = data;
-
       let room = ioServer.all[roomCode];
-      console.log('START GAME PLAYERS ARRAY', room.players);
 
       // start the game with the host socket
       room.startGame(game, roomCode, socket, ioServer, instance.questions);
@@ -144,7 +131,7 @@ export default (ioServer) => {
       let destination = `${process.env.CLIENT_URL}/choosegame`;
       socket.emit('REDIRECT', destination);
       socket.leave(roomCode);
-      delete ioServer.all[roomCode];
+      delete ioServer.all.roomCode;
     });
 
 
@@ -159,8 +146,6 @@ export default (ioServer) => {
 
 
     // ==================== DISCONNECT ==================== //
-    // TODO: what if the socket that disconnects is the host?
-
     socket.on('disconnect', () => {
       if (socket.roomJoined) {
         let roomCode = socket.roomJoined;
@@ -170,7 +155,35 @@ export default (ioServer) => {
         socket.broadcast.to(roomCode).emit('TRACK_PLAYERS', room.players.length, playerNames);
         socket.leave(roomCode);
       }
+      if (socket.roomHost) {
+        let roomCode = socket.roomHost;
+        let room = ioServer.all[roomCode];
+        room.players.forEach(player => {
+          player.emit('REDIRECT_DISCONNECT');
+          player.leave(roomCode);
+        });
+        socket.leave(roomCode);
+        delete ioServer.all.roomCode;
+      }
       console.log('__CLIENT_DISCONNECTED__', socket.id);
+    });
+
+
+
+
+    // ==================== TRUTHY FALSY GAME ==================== //
+    // listening for answers from front end
+    socket.on('TRUTHYFALSY_SEND_ANSWER', (isCorrect, id, roomCode) => {
+      let room = ioServer.all[roomCode];
+      console.log(socket.nickname, 'emitting answer to host', room.host.id);
+      socket.broadcast.to(room.host.id).emit('TRUTHYFALSY_HOST_PASS_ANSWER', isCorrect, id, roomCode);
+      if (room.isHost) console.log('ishost');
+    });
+
+    socket.on('TRUTHYFALSY_HOST_RECEIVE_ANSWER', (isCorrect, id, roomCode) => {
+      console.log('socket.id, socket.roomHost: ', socket.id, socket.roomHost);
+      let room = ioServer.all[roomCode];
+      console.log('ANSWER RECEIVED ROOM', room.code);
     });
   });
 
