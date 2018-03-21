@@ -13,6 +13,8 @@ export default (server) => {
   ioServer.on('connection', socket => {
     log('__CLIENT_CONNECTED__', socket.id);
 
+
+    // ==================== CREATE ROOM ==================== //
     socket.on('CREATE_ROOM', (game, instance) => {
       // generating room code for users
       let roomCode = randomString.generate({
@@ -49,6 +51,8 @@ export default (server) => {
       ioServer.emit('SEND_ROOM', JSON.stringify(data));
     });
 
+
+    // ==================== JOIN ROOM ==================== //
     socket.on('JOIN_ROOM', (roomCode, nickname) => {
       let room = ioServer.all[roomCode];
       if (room) {
@@ -85,7 +89,7 @@ export default (server) => {
         // sending number of players in the waiting room back to front end
         socket.emit('JOINED_ROOM', room.game, room.instance, room.maxPlayers);
         let playerNames = room.players.map(player => player.nickname);
-        ioServer.in(roomCode).emit('PLAYER_JOINED', numPlayers, playerNames);
+        ioServer.in(roomCode).emit('TRACK_PLAYERS', numPlayers, playerNames);
       }
       else {
         // if room doesn't exist
@@ -93,20 +97,26 @@ export default (server) => {
       }
     });
 
-    // socket.on('GET_NUMPLAYERS', roomCode => {
-    //   let room = ioServer.all[roomCode];
-    //   ioServer.in(roomCode).emit('RECEIVE_NUMPLAYERS', room.players.length);
-    // });
 
+    // ==================== REDIRECT PLAYERS ==================== //
+    // when host starts game
+    socket.on('REDIRECT_PLAYERS', (roomCode, path) => {
+      socket.broadcast.to(roomCode).emit('REDIRECT', path);
+    });
+
+
+    // ==================== START GAME ==================== //
     socket.on('START_GAME', data => {
       let {game, instance, roomCode} = data;
       let room = ioServer.all[roomCode];
 
-      // start the game
+      // start the game with the host socket
       room.startGame(game, socket, ioServer, instance);
       log(`__GAME_STARTED__: [${game}: ${roomCode}]`);
     });
 
+
+    // ==================== END GAME ==================== //
     socket.on('END_GAME', socket => {
       let roomCode = socket.room;
       let room = ioServer.all[roomCode];
@@ -114,24 +124,26 @@ export default (server) => {
         let destination = process.env.CLIENT_URL;
         player.emit('REDIRECT', destination);
         player.leave(roomCode);
-        socket.broadcast.to(player.id).emit(`You have left the game.`);
       });
       let destination = `${process.env.CLIENT_URL}/choosegame`;
       socket.emit('REDIRECT', destination);
       socket.leave(roomCode);
-      socket.broadcast.to(socket.id).emit('You have ended the game.');
       delete ioServer.all[roomCode];
     });
 
-    // how to emit leave room when they close browser window??
-    socket.on('LEAVE_ROOM', socket => {
-      let roomCode = socket.roomJoined;
-      let room = ioServer.all[roomCode];
-      room.players = room.players.filter(player => player.id !== socket.id);
-      let destination = process.env.CLIENT_URL;
-      socket.emit('REDIRECT', destination);
-      socket.broadcast.to(roomCode).emit(`${socket.nickname} has left the room.`);
-      socket.leave(roomCode);
+
+    // ==================== DISCONNECT ==================== //
+    socket.on('disconnect', () => {
+      console.log(socket.id);
+      if (socket.roomJoined) {
+        let roomCode = socket.roomJoined;
+        let room = ioServer.all[roomCode];
+        room.players = room.players.filter(player => player.id !== socket.id);
+        let playerNames = room.players.map(player => player.nickname);
+        socket.broadcast.to(roomCode).emit('TRACK_PLAYERS', room.players.length, playerNames);
+        socket.leave(roomCode);
+      }
+      console.log('__CLIENT_DISCONNECTED__', socket.id);
     });
   });
 
