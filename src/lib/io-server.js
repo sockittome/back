@@ -177,13 +177,24 @@ export default (ioServer) => {
       let room = ioServer.all[roomCode];
       console.log(socket.nickname, 'emitting answer to host', room.host.id);
       socket.broadcast.to(room.host.id).emit('TRUTHYFALSY_HOST_PASS_ANSWER', isCorrect, id, roomCode);
-      if (room.isHost) console.log('ishost');
     });
 
     socket.on('TRUTHYFALSY_HOST_RECEIVE_ANSWER', (isCorrect, id, roomCode) => {
-      console.log('socket.id, socket.roomHost: ', socket.id, socket.roomHost);
       let room = ioServer.all[roomCode];
-      console.log('ANSWER RECEIVED ROOM', room.code);
+      // console.log('socket.id, socket.roomHost, playerId: ', socket.id, socket.roomHost, id);
+
+      console.log('host receive answer room.players', room.players);
+      // let player = room.players.filter(player => player.id === id)[0];
+      // console.log('Answer received: ', player.nickname);
+      // if (isCorrect) {
+      //   player.score += 10;
+      //   console.log('Correct answer: ', player.nickname, player.score);
+      //   player.emit('CORRECT_ANSWER', player.nickname, player.score);
+      // }
+      // else {
+      //   console.log('Wrong answer: ', player.nickname, player.score);
+      //   player.emit('WRONG_ANSWER', player.nickname, player.score);
+      // }
     });
   });
 

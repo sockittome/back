@@ -2,34 +2,35 @@ module.exports = (socket, roomCode, ioServer, questions) => {
   // questions is an array of objects containing a question and an answer key
   let room = ioServer.all[roomCode];
   // initially call question phase
-  _questionPhase(questions, room, socket, ioServer);
+  // console.log('____ROOMPLAYERS___', room.players);
+  _questionPhase(questions, roomCode, socket, ioServer, room.players);
 };
 
-function _questionPhase(questions, room, socket, ioServer) {
-  console.log(room.code, '__QUESTION_PHASE__');
+function _questionPhase(questions, roomCode, socket, ioServer, roomPlayers) {
+  console.log(roomCode, '__QUESTION_PHASE__');
 
   // currentQuestion is a question object with the question and answer
   let currentQuestion = questions.shift();
 
   // send the question object to the front end
-  ioServer.in(room.code).emit('SEND_QUESTION', currentQuestion);
+  ioServer.in(roomCode).emit('SEND_QUESTION', currentQuestion);
 
   // 30 seconds to display question and allow players to answer
   setTimeout(function() {
-    _answerPhase(currentQuestion, questions, room, socket, ioServer);
+    _answerPhase(currentQuestion, questions, roomCode, socket, ioServer, roomPlayers);
   }, 30000);
 }
 
 // this function should receive from/send to the front end the stats for correct/wrong answers?
-function _answerPhase(currentQuestion, questions, room, socket, ioServer) {
-  console.log(room.code, '__ANSWER_PHASE__');
+function _answerPhase(currentQuestion, questions, roomCode, socket, ioServer, roomPlayers) {
+  console.log(roomCode, '__ANSWER_PHASE__');
 
-  socket.broadcast.to(room.code).emit('INITIATE_ANSWER_PHASE');
+  socket.broadcast.to(roomCode).emit('INITIATE_ANSWER_PHASE');
 
   if (questions.length) {
     // 20 seconds to display the results screen for the question
     setTimeout(function() {
-      _questionPhase(questions, room, socket, ioServer);
+      _questionPhase(questions, roomCode, socket, ioServer, roomPlayers);
     }, 20000);
   }
   else {
