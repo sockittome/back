@@ -28,21 +28,21 @@ describe('POST /api/v1/register', function() {
   });
 
   describe('Invalid routes', () => {
-    it('Should return a status code of 401 if no body was provided', () => {
+    it('Should return a status code of 500 if no body was provided', () => {
       return superagent.post(ENDPOINT_SIGNUP)
-        .catch(err => expect(err.status).toBe(401));
+        .catch(err => expect(err.status).toBe(500));
     });
     it('Should respond with a status code of 404 when given a bad path', () => {
       return superagent.post(`${ENDPOINT_SIGNUP}/tim`)
         .send({username: 'tim', password: 'timroolz'})
         .catch(err => expect(err.status).toBe(404));
     });
-    it('Should return a status code of 400 if no username is provided', () => {
+    it('Should return a status code of 500 if no username is provided', () => {
       return superagent.post(ENDPOINT_SIGNUP)
         .send(new Auth({
           password: faker.internet.password(),
         }))
-        .catch(err => expect(err.status).toBe(400));
+        .catch(err => expect(err.status).toBe(500));
     });
   });
 });
