@@ -42,7 +42,7 @@ export default (ioServer) => {
       }
 
       let data = { 'roomCode': roomCode, 'game': game, 'maxPlayers': room.maxPlayers, 'roomHost': socket.id };
-      ioServer.emit('SEND_ROOM', JSON.stringify(data));
+      socket.emit('SEND_ROOM', JSON.stringify(data));
     });
 
 
