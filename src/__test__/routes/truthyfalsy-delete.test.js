@@ -34,24 +34,24 @@ describe('DELETE /api/v1/truthyfalsy', () => {
   describe('Invalid auth', () => {
     it('should respond with a 401 not authorized', () => {
       return mocks.truthyfalsy.createOne()
-      .then(mock => {
-        return superagent.delete(`${GAME_ENDPOINT}/${mock.truthyfalsy._id}`)
-          .send();
-      })
-      .then(response => console.log('error did not throw: res:', response))
-      .catch(err => expect(err.status).toBe(401));
+        .then(mock => {
+          return superagent.delete(`${GAME_ENDPOINT}/${mock.truthyfalsy._id}`)
+            .send();
+        })
+        .then(response => console.log('error did not throw: res:', response))
+        .catch(err => expect(err.status).toBe(401));
     });
   });
   describe('Invalid route', () => {
     it('should respond with a 404 not found', () => {
       return mocks.truthyfalsy.createOne()
-      .then(mock => {
-        return superagent.delete(`${GAME_ENDPOINT}/${mock.truthyfalsy._id}nope`)
-          .set('Authorization', `Bearer ${mock.profile.user.token}`)
-          .send();
-      })
-      .then(response => console.log('error did not throw: res:', response))
-      .catch(err => expect(err.status).toBe(404));
+        .then(mock => {
+          return superagent.delete(`${GAME_ENDPOINT}/${mock.truthyfalsy._id}nope`)
+            .set('Authorization', `Bearer ${mock.profile.user.token}`)
+            .send();
+        })
+        .then(response => console.log('error did not throw: res:', response))
+        .catch(err => expect(err.status).toBe(404));
     });
   });
 });
