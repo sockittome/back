@@ -1,9 +1,9 @@
 'use strict';
 
 const superagent = require('superagent');
-const faker = require('faker');
-const server = require('../../lib/http-server');
+
 const mocks = require('../lib/mocks');
+const server = require('../../lib/http-server');
 require('jest');
 
 const PORT = process.env.PORT;
@@ -37,6 +37,7 @@ describe('POST /api/v1/truthyfalsy', () => {
         });
     });
   });
+
   describe('Invalid route', () => {
     it('should respond with a 404 not found', () => {
       return superagent.post(`:${PORT}/api/v1/this is wrong`)

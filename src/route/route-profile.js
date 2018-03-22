@@ -2,8 +2,8 @@
 
 import Profile from '../model/profile';
 import {log} from '../lib/utils';
-import bodyParser from 'body-parser';
 
+const bodyParser = require('body-parser').json();
 const errorHandler = require('../middleware/error-handler');
 const bearerAuth = require('../middleware/bearer-auth');
 

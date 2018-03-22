@@ -54,7 +54,7 @@ mocks.truthyfalsy.createOne = () => {
       return new TruthyFalsy({
         name: faker.internet.userName(),
         questions: [{question: 'flurp', answer: true}, {question: 'blarp', answer: false}],
-        profileId: profile.profile._id,
+        authId: profile.user.user._id,
       }).save();
     })
     .then(truthyfalsy => {

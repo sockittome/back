@@ -1,61 +1,55 @@
 'use strict';
 
 const superagent = require('superagent');
-const faker = require('faker');
-const server = require('../../lib/http-server');
+
 const mocks = require('../lib/mocks');
+const server = require('../../lib/http-server');
+require('jest');
 
 const PORT = process.env.PORT;
-const ENDPOINT_PROFILE = `:${PORT}/api/v1/profile`;
+const PROFILE_ENDPOINT = `:${PORT}/api/v1/profile`;
 
 describe('PUT /api/v1/profile', function() {
   beforeAll(server.start);
   afterAll(server.stop);
+  afterAll(mocks.auth.removeAll);
+  afterAll(mocks.profile.removeAll);
+  afterAll(mocks.truthyfalsy.removeAll);
 
-  describe('Valid Routes', () => {
-    it('Should respond with a status code of 204, and a valid token', () => {
-      mocks.profile.createOne().then(data => this.mockProfile = data)
-        .then(newProfile => {
-          return superagent.put(`${ENDPOINT_PROFILE}/${newProfile._id}`)
-            .set('Authorization', `Bearer ${newProfile.user.token}`)
-            .send({
-              firstName: 'timothy',
-            })
-            .then(res => {
-              expect(res.status).toEqual(204);
-              expect(Array.isArray(res.body)).toBeTruthy();
-            });
+  describe('Valid route', () => {
+    beforeAll(() => {
+      return mocks.profile.createOne()
+        .then(profile => this.mockProfile = profile);
+    });
+    it('should update a profile', () => {
+      let update = {firstName: 'Updated'};
+      return superagent.put(`${PROFILE_ENDPOINT}/${this.mockProfile.profile._id}`)
+        .set('Authorization', `Bearer ${this.mockProfile.user.token}`)
+        .send(update)
+        .then(res => expect(res.status).toEqual(204));
+    });
+  });
+  describe('Invalid route', () => {
+    it('should return 404 not found', () => {
+      return superagent.put(`:${PORT}/api/v1/not my profile`)
+        .catch(err => expect(err.status).toEqual(404));
+    });
+    it('should return 401 not authorized', () => {
+      return mocks.profile.createOne()
+        .then(mockProfile => {
+          return superagent.put(`${PROFILE_ENDPOINT}/${mockProfile._id}`)
+            .set('Authorization', `Bearer BAD_TOKEN`)
+            .catch(err => expect(err.status).toEqual(401));
+        });
+    });
+    it('should return 400 bad request', () => {
+      return mocks.profile.createOne()
+        .then(mockProfile => {
+          return superagent.put(`${PROFILE_ENDPOINT}/${mockProfile.profile._id}`)
+            .set('Authorization', `Bearer ${mockProfile.user.token}`)
+            .send('BAD DATA')
+            .catch(err => expect(err.status).toEqual(400));
         });
     });
   });
-
-  describe('Invalid Routes', () => {
-    it('Should respond with an authorization error', () => {
-      mocks.profile.createOne().then(data => this.mockProfile = data)
-        .then(newProfile => {
-          return superagent.put(`${ENDPOINT_PROFILE}/${newProfile._id}`)
-            .send({
-              firstName: 'timothy',
-            })
-            .catch(err => {
-              this.error = err;
-              expect(err.response.text).toMatch(/Auth/);
-            });
-        });
-    });
-    it('Should respond with a status code of 401 when given a bad path', () => {
-      mocks.profile.createOne().then(data => this.mockProfile = data)
-        .then(newProfile => {
-          return superagent.put(`${ENDPOINT_PROFILE}/${newProfile._id}`)
-            .send({
-              firstName: 'timothy',
-            })
-            .catch(err => {
-              this.error = err;
-              expect(err.status).toBe(401);
-            });
-        });
-    });
-  });
-
 });
