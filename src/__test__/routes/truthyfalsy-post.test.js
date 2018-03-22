@@ -37,4 +37,12 @@ describe('POST /api/v1/truthyfalsy', () => {
         });
     });
   });
+
+  describe('Invalid route', () => {
+    it('should respond with a 404 not found', () => {
+      return superagent.post(`:${PORT}/api/v1/this is wrong`)
+        .then(response => console.log('error did not throw: res:', response))
+        .catch(err => expect(err.status).toBe(404));
+    });
+  });
 });
