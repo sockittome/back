@@ -120,18 +120,22 @@ export default (ioServer) => {
 
 
     // ==================== END GAME ==================== //
-    socket.on('END_GAME', socket => {
-      let roomCode = socket.room;
-      let room = ioServer.all[roomCode];
-      room.players.map(player => {
-        let destination = process.env.CLIENT_URL;
-        player.emit('REDIRECT', destination);
-        player.leave(roomCode);
-      });
-      let destination = `${process.env.CLIENT_URL}/choosegame`;
-      socket.emit('REDIRECT', destination);
+    socket.on('END_GAME', roomCode => {
+      socket.emit('REDIRECT_ENDGAME');
       socket.leave(roomCode);
       delete ioServer.all.roomCode;
+
+      // let roomCode = socket.room;
+      // let room = ioServer.all[roomCode];
+      // room.players.map(player => {
+      //   let destination = process.env.CLIENT_URL;
+      //   player.emit('REDIRECT', destination);
+      //   player.leave(roomCode);
+      // });
+      // let destination = `${process.env.CLIENT_URL}/choosegame`;
+      // socket.emit('REDIRECT', destination);
+      // socket.leave(roomCode);
+      // delete ioServer.all.roomCode;
     });
 
 
@@ -183,18 +187,17 @@ export default (ioServer) => {
       let room = ioServer.all[roomCode];
       // console.log('socket.id, socket.roomHost, playerId: ', socket.id, socket.roomHost, id);
 
-      console.log('host receive answer room.players', room.players);
-      // let player = room.players.filter(player => player.id === id)[0];
-      // console.log('Answer received: ', player.nickname);
-      // if (isCorrect) {
-      //   player.score += 10;
-      //   console.log('Correct answer: ', player.nickname, player.score);
-      //   player.emit('CORRECT_ANSWER', player.nickname, player.score);
-      // }
-      // else {
-      //   console.log('Wrong answer: ', player.nickname, player.score);
-      //   player.emit('WRONG_ANSWER', player.nickname, player.score);
-      // }
+      let player = room.players.filter(player => player.id === id)[0];
+      console.log('Answer received: ', player.nickname);
+      if (isCorrect) {
+        player.score += 10;
+        console.log('Correct answer: ', player.nickname, player.score);
+        player.broadcast.to(room.host.id).emit('CORRECT_ANSWER', player.nickname, player.score);
+      }
+      else {
+        console.log('Wrong answer: ', player.nickname, player.score);
+        player.broadcast.to(room.host.id).emit('WRONG_ANSWER', player.nickname, player.score);
+      }
     });
   });
 
