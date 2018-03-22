@@ -5,8 +5,8 @@ require('jest');
 
 const Auth = require('../../model/auth');
 const Profile = require('../../model/profile');
+const TruthyFalsy = require('../../model/truthyfalsy');
 
-// sgc - Set mocks as an object that will be exported
 const mocks = module.exports = {};
 
 mocks.auth = {};
@@ -43,6 +43,26 @@ mocks.profile.createOne = () => {
     });
 };
 
-// sgc - Delete all auths (users), If songs were created delete those first
+mocks.truthyfalsy = {};
+
+mocks.truthyfalsy.createOne = () => {
+  let result = {};
+
+  return mocks.profile.createOne()
+    .then(profile => result.profile = profile)
+    .then(profile => {
+      return new TruthyFalsy({
+        name: faker.internet.userName(),
+        questions: [{question: 'flurp', answer: true}, {question: 'blarp', answer: false}],
+        profileId: profile.profile._id,
+      }).save();
+    })
+    .then(truthyfalsy => {
+      result.truthyfalsy = truthyfalsy;
+      return result;
+    });
+};
+
+mocks.truthyfalsy.removeAll = () => Promise.all([TruthyFalsy.remove()]);
 mocks.auth.removeAll = () => Promise.all([Auth.remove()]);
 mocks.profile.removeAll = () => Promise.all([Profile.remove()]);
