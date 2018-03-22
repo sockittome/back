@@ -11,7 +11,8 @@ const ERROR_MESSAGE = 'Authorization failed';
 module.exports = router => {
   router.route('/truthyfalsy/:_id?')
     .post(bearerAuth, bodyParser, (request, response) => {
-      request.body.authId = request.auth._id;
+      request.body.authId = request.user._id;
+      // console.log('request body', request.user);
       return new TruthyFalsy(request.body).save()
         .then(createdQuiz => {
           response.status(201).json(createdQuiz);
@@ -27,15 +28,14 @@ module.exports = router => {
       }
       return TruthyFalsy.find()
         .then(quizzes => {
-          let quizIds = quizzes.map(quiz => quiz._id);
-          response.status(200).json(quizIds);
+          // let quizIds = quizzes.map(quiz => quiz._id);
+          response.status(200).json(quizzes);
         })
         .catch(error => errorHandler(error, response));
     })
 
     .put(bearerAuth, bodyParser, (request, response) => {
       TruthyFalsy.findOne({
-        authId: request.auth._id,
         _id: request.params._id,
       })
         .then(quiz => {
@@ -49,7 +49,7 @@ module.exports = router => {
     .delete(bearerAuth, (request, response) => {
       return TruthyFalsy.findById(request.params._id)
         .then(quiz => {
-          if(quiz.authId.toString() === request.auth._id.toString()) return quiz.remove();
+          if(quiz.authId.toString() === request.user._id.toString()) return quiz.remove();
           return errorHandler(new Error(ERROR_MESSAGE), response);
         })
         .then(() => response.sendStatus(204))

@@ -6,11 +6,11 @@ const Profile = require('./profile');
 const TruthyFalsy = mongoose.Schema({
   name: {type: String, required: true},
   questions: [],
-  profileId: {type: mongoose.Schema.Types.ObjectId, ref: 'profile', required: true},
+  authId: {type: mongoose.Schema.Types.ObjectId, ref: 'auth', required: true},
 });
 
 TruthyFalsy.pre('save', function(next) {
-  Profile.findById(this.profileId)
+  Profile.findOne({ authId: this.authId })
     .then(host => {
       host.games = [...new Set(host.games).add(this._id)];
       host.save();
@@ -20,7 +20,7 @@ TruthyFalsy.pre('save', function(next) {
 });
 
 TruthyFalsy.post('remove', function(doc, next) {
-  Profile.findById(doc.profileId)
+  Profile.findOne({ authId: doc.authId })
     .then(host => {
       host.games = host.games.filter(v => v.toString() !== doc._id.toString());
       host.save();

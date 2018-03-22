@@ -8,11 +8,11 @@ const errorHandler = require('../middleware/error-handler');
 const bearerAuth = require('../middleware/bearer-auth');
 
 module.exports = function(router) {
-  router.route('/profile/:_id')
+  router.route('/profile/:_id?')
     .get(bearerAuth, (request, response) => {
       log('__ROUTE__ GET PROFILE');
 
-      return Profile.findById(request.params._id)
+      return Profile.findOne({ authId: request.user._id })
         .then(profile => response.status(200).json(profile))
         .catch(error => errorHandler(error, response));
     })
@@ -32,7 +32,7 @@ module.exports = function(router) {
     .delete(bearerAuth, (request, response) => {
       return Profile.findById(request.params._id)
         .then(profile => {
-          if(profile.authId.toString() === request.auth._id.toString()) return profile.remove();
+          if(profile.authId.toString() === request.user._id.toString()) return profile.remove();
           return errorHandler(new Error('Authorization failed'), response);
         })
         .then(() => response.sendStatus(204))
