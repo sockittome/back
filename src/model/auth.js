@@ -1,5 +1,3 @@
-'use strict';
-
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
@@ -8,12 +6,11 @@ const mongoose = require('mongoose');
 const Auth = mongoose.Schema({
   username: {type: String, required: true, unique: true},
   password: {type: String, required: true},
-  email: {type: String, required: true},
   compareHash: {type: String, required: false},
 });
 
 Auth.methods.generatePasswordHash = function (password) {
-  if(!password) return Promise.reject(new Error('Authorization failed.Password required'));
+  if(!password) return Promise.reject(new Error('Authorization failed. Password required'));
 
   return bcrypt.hash(password, 10)
     .then(hash => this.password = hash)

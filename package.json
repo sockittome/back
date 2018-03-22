@@ -15,14 +15,35 @@
   "homepage": "https://github.com/sockittome/back#readme",
   "scripts": {
     "start": "node index.js",
-    "start:watch": "nodemon index.js  ",
+    "start:watch": "nodemon index.js",
     "start:debug": "DEBUG=http* nodemon index.js",
-    "test": "jest -i --coverage --verbose",
-    "test:watch": "jest --watchAll",
+    "test": "jest -i",
+    "test:watch": "jest -i --watchAll",
+    "test:debug": "DEBUG=http* jest -i",
     "lint": "eslint .",
     "lint:test": "npm run lint && npm test",
     "start-db": "mkdir -p ./data/db && mongod --dbpath ./data/db",
     "stop-db": "killall mongod"
+  },
+  "jest": {
+    "setupFiles": [
+      "./src/__test__/lib/jest-setup.js"
+    ],
+    "verbose": true,
+    "testEnvironment": "node",
+    "collectCoverage": true,
+    "coverageDirectory": "./coverage",
+    "coveragePathIgnorePatterns": [
+      "/__test__/"
+    ],
+    "coverageThreshold": {
+      "global": {
+        "branches": 0,
+        "functions": 0,
+        "lines": 0,
+        "statements": 0
+      }
+    }
   },
   "devDependencies": {
     "babel-eslint": "^8.2.2",

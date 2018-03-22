@@ -1,0 +1,199 @@
+Started phase 0, duration: 10s @ 09:32:10(-0700) 2018-03-21
+Report @ 09:32:20(-0700) 2018-03-21
+  Scenarios launched:  899
+  Scenarios completed: 68
+  Requests completed:  68
+  RPS sent: 90.26
+  Request latency:
+    min: 534.2
+    max: 8431.7
+    median: 5539.2
+    p95: 8239.2
+    p99: 8429.6
+  Codes:
+    201: 68
+
+Report @ 09:32:30(-0700) 2018-03-21
+  Scenarios launched:  1
+  Scenarios completed: 81
+  Requests completed:  81
+  RPS sent: 0.1
+  Request latency:
+    min: 10331.3
+    max: 17398.8
+    median: 13790.6
+    p95: 17280
+    p99: 17394.7
+  Codes:
+    201: 81
+
+Report @ 09:32:40(-0700) 2018-03-21
+  Scenarios launched:  0
+  Scenarios completed: 61
+  Requests completed:  61
+  RPS sent: NaN
+  Request latency:
+    min: 19922.7
+    max: 27663.7
+    median: 24871.8
+    p95: 27340.9
+    p99: 27635.9
+  Codes:
+    201: 61
+
+Report @ 09:32:50(-0700) 2018-03-21
+  Scenarios launched:  0
+  Scenarios completed: 43
+  Requests completed:  43
+  RPS sent: NaN
+  Request latency:
+    min: 27699.4
+    max: 35662.6
+    median: 30279.7
+    p95: 35632.6
+    p99: NaN
+  Codes:
+    201: 43
+
+Report @ 09:33:00(-0700) 2018-03-21
+  Scenarios launched:  0
+  Scenarios completed: 56
+  Requests completed:  56
+  RPS sent: NaN
+  Request latency:
+    min: 39574.7
+    max: 46332
+    median: 42107.2
+    p95: 46306.2
+    p99: 46331.7
+  Codes:
+    201: 56
+
+Report @ 09:33:10(-0700) 2018-03-21
+  Scenarios launched:  0
+  Scenarios completed: 86
+  Requests completed:  86
+  RPS sent: NaN
+  Request latency:
+    min: 46655.2
+    max: 55569.1
+    median: 51841.3
+    p95: 55217.1
+    p99: 55558.7
+  Codes:
+    201: 86
+
+Report @ 09:33:20(-0700) 2018-03-21
+  Scenarios launched:  0
+  Scenarios completed: 61
+  Requests completed:  61
+  RPS sent: NaN
+  Request latency:
+    min: 57063.7
+    max: 64851.8
+    median: 60164.1
+    p95: 64684.1
+    p99: 64848.2
+  Codes:
+    201: 61
+
+Report @ 09:33:30(-0700) 2018-03-21
+  Scenarios launched:  0
+  Scenarios completed: 63
+  Requests completed:  63
+  RPS sent: NaN
+  Request latency:
+    min: 64988.1
+    max: 74164.7
+    median: 68901.8
+    p95: 73852.7
+    p99: 74162.2
+  Codes:
+    201: 63
+
+Report @ 09:33:40(-0700) 2018-03-21
+  Scenarios launched:  0
+  Scenarios completed: 67
+  Requests completed:  67
+  RPS sent: NaN
+  Request latency:
+    min: 74397.8
+    max: 83451
+    median: 77770.8
+    p95: 83334.3
+    p99: 83449.9
+  Codes:
+    201: 67
+
+Report @ 09:33:50(-0700) 2018-03-21
+  Scenarios launched:  0
+  Scenarios completed: 96
+  Requests completed:  96
+  RPS sent: NaN
+  Request latency:
+    min: 83781.3
+    max: 92267.7
+    median: 88044.4
+    p95: 92030.8
+    p99: 92264.7
+  Codes:
+    201: 96
+
+Report @ 09:34:00(-0700) 2018-03-21
+  Scenarios launched:  0
+  Scenarios completed: 71
+  Requests completed:  71
+  RPS sent: NaN
+  Request latency:
+    min: 92555.3
+    max: 101689
+    median: 96934.6
+    p95: 101523.9
+    p99: 101670.8
+  Codes:
+    201: 71
+
+Report @ 09:34:10(-0700) 2018-03-21
+  Scenarios launched:  0
+  Scenarios completed: 96
+  Requests completed:  96
+  RPS sent: NaN
+  Request latency:
+    min: 101915.1
+    max: 110543
+    median: 106236.1
+    p95: 110204.8
+    p99: 110529.5
+  Codes:
+    201: 96
+
+Report @ 09:34:16(-0700) 2018-03-21
+  Scenarios launched:  0
+  Scenarios completed: 51
+  Requests completed:  51
+  RPS sent: NaN
+  Request latency:
+    min: 110694.5
+    max: 115970.9
+    median: 112898
+    p95: 115850.2
+    p99: 115970.7
+  Codes:
+    201: 51
+
+All virtual users finished
+Summary report @ 09:34:16(-0700) 2018-03-21
+  Scenarios launched:  900
+  Scenarios completed: 900
+  Requests completed:  900
+  RPS sent: 7.13
+  Request latency:
+    min: 534.2
+    max: 115970.9
+    median: 64306.5
+    p95: 111178.1
+    p99: 114419.3
+  Scenario counts:
+    Create Users: 900 (100%)
+  Codes:
+    201: 900

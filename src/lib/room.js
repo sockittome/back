@@ -7,20 +7,18 @@ module.exports = class Room {
     this.code = roomCode;
     // players is an array of each player's socket
     this.players = [];
-    this.gameStarted = false;
+    this.closed = false;
     this.game = null;
-    // gameScores object has each player's socket ID as the key and their score as the value
-    // this.gameScores = {};
 
     socket.join(roomCode);
   }
 
-  startGame(game, socket, ioServer, instance) {
-    this.gameStarted = true;
+  startGame(game, roomCode, socket, ioServer, instance) {
+    this.closed = true;
     this.players.map(player => player.score = 0);
     switch(game) {
       case 'truthyfalsy':
-        truthyfalsyGame(socket, ioServer, instance);
+        truthyfalsyGame(socket, roomCode, ioServer, instance);
         break;
     }
   }
