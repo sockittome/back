@@ -18,7 +18,7 @@ function _questionPhase(questions, roomCode, socket, ioServer, roomPlayers) {
   // 20 seconds to display question and allow players to answer
   setTimeout(function() {
     _answerPhase(currentQuestion, questions, roomCode, socket, ioServer, roomPlayers);
-  }, 20000);
+  }, 15000);
 }
 
 // this function should receive from/send to the front end the stats for correct/wrong answers?
@@ -38,7 +38,7 @@ function _answerPhase(currentQuestion, questions, roomCode, socket, ioServer, ro
     // call end game function/screen here after same amount of setTimeout
     setTimeout(function () {
       _endGame(questions, roomCode, socket, ioServer, roomPlayers);
-    }, 15000);
+    }, 10000);
   }
 };
 
