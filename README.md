@@ -18,7 +18,7 @@ Backend server for Sock It To Me! educational quiz game.
 ### Profile
 ##### `GET api/v1/profile/{_id}`
 * `request`: receives `GET` with a user model's `_id` as
-* `response`: sends `200` (okay) with body containing `profile`
+* `response`: sends `200` (okay) with body containing  a user `profile`
 * `error`:
   * unauthorized `token`: sends `401` (unauthorized) error
 
