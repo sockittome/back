@@ -1,0 +1,36 @@
+{
+  "config": {
+    "target": "http://sockit.live:3000",
+    "phases": [
+      {
+        "duration": 5,
+        "arrivalRate": 5
+      },
+      {
+        "duration": 20,
+        "arrivalRate": 100
+      }
+    ]
+    ,
+    "processor" : "./load-test-create-user.js"
+  },
+  "scenarios": [
+    {
+      "name" : "Create Users",
+      "flow": [
+        {
+          "function": "create"
+        },
+        {
+          "post": {
+            "url": "/api/v1/register",
+            "json": {
+              "username": "{{ username }}",
+              "password": "{{ password }}"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
