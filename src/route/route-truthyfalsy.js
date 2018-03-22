@@ -28,8 +28,8 @@ module.exports = router => {
       }
       return TruthyFalsy.find()
         .then(quizzes => {
-          let quizIds = quizzes.map(quiz => quiz._id);
-          response.status(200).json(quizIds);
+          // let quizIds = quizzes.map(quiz => quiz._id);
+          response.status(200).json(quizzes);
         })
         .catch(error => errorHandler(error, response));
     })

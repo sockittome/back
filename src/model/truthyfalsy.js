@@ -20,7 +20,7 @@ TruthyFalsy.pre('save', function(next) {
 });
 
 TruthyFalsy.post('remove', function(doc, next) {
-  Profile.findById(doc.authId)
+  Profile.findOne({ authId: doc.authId })
     .then(host => {
       host.games = host.games.filter(v => v.toString() !== doc._id.toString());
       host.save();
