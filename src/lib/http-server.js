@@ -32,6 +32,7 @@ const server = module.exports = {};
 server.start = () => {
   return new Promise((resolve, reject) => {
     if (state.isOn)
+      /* istanbul ignore next line */
       return reject(new Error('USAGE ERROR: the server is already on'));
     state.isOn = true;
     db.start()

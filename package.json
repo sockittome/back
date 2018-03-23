@@ -34,7 +34,10 @@
     "collectCoverage": true,
     "coverageDirectory": "./coverage",
     "coveragePathIgnorePatterns": [
-      "/__test__/"
+      "/__test__/",
+      "/lib/io-server",
+      "/lib/room",
+      "/game/truthyfalsy"
     ],
     "coverageThreshold": {
       "global": {
