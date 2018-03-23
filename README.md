@@ -110,16 +110,19 @@ npm run test
 * `error`: 
   * invalid `username` or `password`: sends `400` (bad-request) error
   * `username` taken: sends `200` (okay) with a message explaining the conflict
+![auth](./docs/GET-login.jpg)
 ##### `GET /api/v1/login`
 * `request`: receives `GET` with body containing `username` and `password` properties
 * `response`: sends `200` (okay) with body containing JWT `token`
 * `error`:
   * invalid `password`: sends `400` (bad-request) error
   * `username` not found: sends `404` (not-found) error
+![auth](./docs/POST-register.jpg)
 
 ### Profile
 ##### `GET api/v1/profile/{_id}?`
 * `Description`: gets a profile based on an id or token.
+![profile](./docs/GET-profile-id.jpg)
 ##### `PUT api/v1/profile/{_id}?`
 * `Description`: updates a profile based on an id or token.
 ##### `DELETE api/v1/profile/{_id}?`
@@ -128,10 +131,14 @@ npm run test
 ### truthyfalsy
 ##### `GET api/v1/truthyfalsy/:_id?`
 * `Description`: gets a truthyfalsy (quiz) based on an id or token.
+![truthyfalsy](./docs/GET-truthyfalsy.jpg)
 ##### `PUT api/v1/truthyfalsy/:_id?`
 * `Description`: updates a truthyfalsy (quiz) based on an id or token.
 ##### `DELETE api/v1/truthyfalsy/:_id?`
 * `Description`: deletes a truthyfalsy (quiz) based on an id or token.
+##### `POST api/v1/truthyfalsy/:_id?`
+* `Description`: deletes a truthyfalsy (quiz) based on an id or token.
+![truthyfalsy](./docs/POST-truthyfalsy.jpg)
 
 ### File tree structure
 
