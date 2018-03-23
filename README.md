@@ -1,21 +1,21 @@
-          ___          _     _ _     _                   
-        / __| ___  __| |__ (_) |_  | |_ ___   _ __  ___ 
+          ___          _     _ _     _
+        / __| ___  __| |__ (_) |_  | |_ ___   _ __  ___
         \__ \/ _ \/ _| / / | |  _| |  _/ _ \ | '  \/ -_)
         |___/\___/\__|_\_\ |_|\__|  \__\___/ |_|_|_\___|
-                                                               
+
 [![Build Status](https://travis-ci.org/sockittome/back.svg?branch=master)](https://travis-ci.org/sockittome/back)
 
 ## General information
 **_Authors_**:
-* Jeremy Pearson: https://github.com/jpjazzy 
+* Jeremy Pearson: https://github.com/jpjazzy
 * Melanie Downing: https://github.com/sayanything830
 * Joy Hou: https://github.com/strawbee
-* Ender Smith: https://github.com/EnderSmith 
+* Ender Smith: https://github.com/EnderSmith
 * Dean Murphy: https://github.com/dmurphy90
 
 **_Version_**: 1.0.0 [Back end]
 
-**_Libraries_**: 
+**_Libraries_**:
 
     "babel-eslint": "^8.2.2",
     "babel-jest": "^22.4.1",
@@ -55,11 +55,11 @@
 
 ## About the app
 
-Sock it to me is a javascript based game website where you can games with local groups, and with an emphasis on educational games. 
+Sock it to me is a javascript based game website where you can games with local groups, and with an emphasis on educational games.
 
 Currently as a first model, the only game implemented is called truthy falsy and is variation on a quiz game. The goal is simple. All answers are true or false and your goal is to get the most points. This game is meant for classes and large groups.
 
-To join a room, all you need is the code. The games are meant to be played with a host screen and all other players are looking at the host screen. You can join from other places, but if you can't see the host screen, you won't be able to see some important information, so make sure you can! A host can see all quizzes made in the database. To have a wide selection of quizzes to choose from, invite your friends and have everyone make quizzes! 
+To join a room, all you need is the code. The games are meant to be played with a host screen and all other players are looking at the host screen. You can join from other places, but if you can't see the host screen, you won't be able to see some important information, so make sure you can! A host can see all quizzes made in the database. To have a wide selection of quizzes to choose from, invite your friends and have everyone make quizzes!
 
 ## How to use our project
 
@@ -88,7 +88,7 @@ Install the necessary dependencies with:
 npm i
 ```
 
-### Running 
+### Running
 
 In terminal type the following to run start a server after installing dependencies:
 ```
@@ -107,19 +107,22 @@ npm run test
 ##### `POST /api/v1/register`
 * `request`: receives `POST` with body containing `username` and `password` properties
 * `response`: saves authenticated `user`, sends `201` (created) and a `token` (JWT)
-* `error`: 
+* `error`:
   * invalid `username` or `password`: sends `400` (bad-request) error
   * `username` taken: sends `200` (okay) with a message explaining the conflict
+![auth](./docs/GET-login.jpg)
 ##### `GET /api/v1/login`
 * `request`: receives `GET` with body containing `username` and `password` properties
 * `response`: sends `200` (okay) with body containing JWT `token`
 * `error`:
   * invalid `password`: sends `400` (bad-request) error
   * `username` not found: sends `404` (not-found) error
+![auth](./docs/POST-register.jpg)
 
 ### Profile
 ##### `GET api/v1/profile/{_id}?`
 * `Description`: gets a profile based on an id or token.
+![profile](./docs/GET-profile-id.jpg)
 ##### `PUT api/v1/profile/{_id}?`
 * `Description`: updates a profile based on an id or token.
 ##### `DELETE api/v1/profile/{_id}?`
@@ -128,10 +131,14 @@ npm run test
 ### truthyfalsy
 ##### `GET api/v1/truthyfalsy/:_id?`
 * `Description`: gets a truthyfalsy (quiz) based on an id or token.
+![truthyfalsy](./docs/GET-truthyfalsy.jpg)
 ##### `PUT api/v1/truthyfalsy/:_id?`
 * `Description`: updates a truthyfalsy (quiz) based on an id or token.
 ##### `DELETE api/v1/truthyfalsy/:_id?`
 * `Description`: deletes a truthyfalsy (quiz) based on an id or token.
+##### `POST api/v1/truthyfalsy/:_id?`
+* `Description`: deletes a truthyfalsy (quiz) based on an id or token.
+![truthyfalsy](./docs/POST-truthyfalsy.jpg)
 
 ### File tree structure
 
